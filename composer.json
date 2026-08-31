@@ -1,0 +1,30 @@
+{
+    "name": "survos/bookworm-bundle",
+    "description": "Index versioned Markdown documentation for source-grounded Symfony AI assistants.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["symfony", "ai", "documentation", "markdown", "rag", "vector-search"],
+    "autoload": {"psr-4": {"Survos\\BookwormBundle\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Survos\\BookwormBundle\\Tests\\": "tests/"}},
+    "require": {
+        "php": "^8.4",
+        "ecourty/text-chunker": "^1.2",
+        "survos/kit-bundle": "^2.5",
+        "symfony/ai-store": "^0.13",
+        "symfony/console": "^8.1",
+        "symfony/filesystem": "^8.1",
+        "symfony/finder": "^8.1",
+        "symfony/framework-bundle": "^8.1",
+        "symfony/messenger": "^8.1",
+        "symfony/string": "^8.1",
+        "symfony/uid": "^8.1"
+    },
+    "require-dev": {"knplabs/github-api": "^3.19", "phpunit/phpunit": "^12.0|^13.0"},
+    "suggest": {
+        "ext-zip": "Extracts repositories downloaded by bookworm:fetch.",
+        "knplabs/github-api": "Enables bookworm:fetch for GitHub repositories.",
+        "symfony/ai-postgres-store": "Stores document embeddings in PostgreSQL with pgvector."
+    },
+    "extra": {"symfony": {"require": "8.1.*"}},
+    "config": {"sort-packages": true}
+}
