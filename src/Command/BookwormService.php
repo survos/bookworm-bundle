@@ -5,7 +5,7 @@ namespace Survos\BookwormBundle\Command;
 use Survos\BookwormBundle\Corpus\CorpusRegistry;
 use Survos\BookwormBundle\Message\IndexCorpus;
 use Survos\BookwormBundle\Service\CorpusIndexer;
-use Survos\BookwormBundle\Source\{GitHubFetcher,GitHubRepository};
+use Survos\BookwormBundle\Source\{GitFetcher,GitHubFetcher,GitHubRepository};
 use Symfony\Component\Console\Attribute\{Argument,AsCommand,Option};
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -14,7 +14,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
 final readonly class BookwormService
 {
     public function __construct(private CorpusRegistry $corpora, private CorpusIndexer $indexer,
-        private MessageBusInterface $bus, private ?GitHubFetcher $githubFetcher, private string $projectDir) {}
+        private MessageBusInterface $bus, private GitFetcher $gitFetcher,
+        private ?GitHubFetcher $githubFetcher, private string $projectDir) {}
 
     #[AsCommand('bookworm:index', 'Index a configured Markdown corpus through Messenger')]
     public function index(SymfonyStyle $io, #[Argument('configured corpus name')] string $corpus,
@@ -43,14 +44,13 @@ final readonly class BookwormService
         #[Option('branch, tag, or commit')] string $ref = 'HEAD',
         #[Option('target directory; defaults to var/bookworm/<owner>/<repository>')] ?string $target = null): int
     {
-        if (null === $this->githubFetcher) {
-            $io->error('Install knplabs/github-api plus a PSR-18 client to enable bookworm:fetch.');
-            return Command::FAILURE;
-        }
-        $github = GitHubRepository::fromString($repository);
+        $uri = str_contains($repository, '://') ? $repository : 'https://'.$repository;
+        $host = parse_url($uri, PHP_URL_HOST); $github = GitHubRepository::fromString($repository);
         $target ??= $this->projectDir.'/var/bookworm/'.$github->slug();
-        $path = $this->githubFetcher->fetch($github, $target, $ref);
-        $io->success(sprintf('Fetched %s@%s to %s.', $github->slug(), $ref, $path));
+        $path = 'github.com' === $host && null !== $this->githubFetcher
+            ? $this->githubFetcher->fetch($github, $target, $ref)
+            : $this->gitFetcher->fetch($uri, $target, $ref);
+        $io->success(sprintf('Fetched %s@%s to %s.', $repository, $ref, $path));
         return Command::SUCCESS;
     }
 }

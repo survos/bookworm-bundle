@@ -1,0 +1,20 @@
+<section class="bookworm-chat" {{ attributes }}>
+    <header><strong>Ask Bookworm</strong>
+        <button type="button" data-action="live#action" data-live-action-param="reset">Reset</button>
+    </header>
+    <div class="bookworm-chat__messages" aria-live="polite">
+        {% for item in this.messages %}
+            <article class="bookworm-chat__message bookworm-chat__message--{{ item.role }}">
+                <strong>{{ item.role == 'user' ? 'You' : 'Bookworm' }}</strong>
+                <div>{{ item.content|nl2br }}</div>
+            </article>
+        {% else %}<p>Ask a question. Answers are grounded in this book's indexed documentation.</p>{% endfor %}
+    </div>
+    <form data-action="live#action:prevent" data-live-action-param="submit">
+        <label for="bookworm-question-{{ corpus }}">Question</label>
+        <div class="bookworm-chat__input">
+            <input id="bookworm-question-{{ corpus }}" type="text" data-model="norender|message" autocomplete="off" placeholder="What would you like to know?">
+            <button type="submit">Ask</button>
+        </div>
+    </form>
+</section>

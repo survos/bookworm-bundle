@@ -13,8 +13,10 @@ final readonly class CorpusRegistry
         $corpora = [];
         foreach ($config as $name => $values) {
             $corpora[$name] = new Corpus($name, $values['directory'], $values['indexer'],
+                $values['agent'] ?? 'ai.agent.'.$name, $values['retriever'] ?? 'ai.retriever.'.$name,
+                $values['title'] ?? $name, $values['description'] ?? '', $values['source_url'] ?? '', $values['ref'] ?? 'HEAD',
                 $values['repository'] ?? null, $values['canonical_base_url'] ?? null,
-                $values['patterns'] ?? ['*.md'], $values['max_chunk_size'] ?? 4000);
+                $values['patterns'] ?? ['*.md'], $values['paths'] ?? [], $values['max_chunk_size'] ?? 4000);
         }
         $this->corpora = $corpora;
     }

@@ -22,6 +22,7 @@ final readonly class MarkdownCorpusLoader
         $root = realpath($corpus->directory) ?: throw new \RuntimeException('Cannot resolve corpus directory.');
         $finder = (new Finder())->files()->in($root)->sortByName();
         foreach ($corpus->patterns as $pattern) { $finder->name($pattern); }
+        foreach ($corpus->paths as $path) { $finder->path($path); }
         $namespace = Uuid::fromString('6ba7b811-9dad-11d1-80b4-00c04fd430c8');
 
         foreach ($finder as $file) {
