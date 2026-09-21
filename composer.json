@@ -22,7 +22,7 @@
         "symfony/string": "^8.1",
         "symfony/uid": "^8.1",
         "symfony/ux-live-component": "^3.4",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0|^4.0"
     },
     "require-dev": {"knplabs/github-api": "^3.19", "phpunit/phpunit": "^12.0|^13.0"},
     "suggest": {
