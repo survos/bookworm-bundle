@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Survos\BookwormBundle\Corpus;
 
 final readonly class Corpus
@@ -21,5 +23,6 @@ final readonly class Corpus
         /** @var list<string> */
         public array $paths = [],
         public int $maxChunkSize = 4000,
-    ) {}
+    ) {
+    }
 }

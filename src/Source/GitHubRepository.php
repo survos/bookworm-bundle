@@ -1,10 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Survos\BookwormBundle\Source;
 
 final readonly class GitHubRepository
 {
-    public function __construct(public string $owner, public string $name) {}
+    public function __construct(public string $owner, public string $name)
+    {
+    }
 
     public static function fromString(string $value): self
     {
@@ -13,8 +17,12 @@ final readonly class GitHubRepository
         if (count($parts) < 2) {
             throw new \InvalidArgumentException(sprintf('Expected github.com/owner/repository, got "%s".', $value));
         }
+
         return new self($parts[0], preg_replace('/\.git$/', '', $parts[1]) ?? $parts[1]);
     }
 
-    public function slug(): string { return $this->owner.'/'.$this->name; }
+    public function slug(): string
+    {
+        return $this->owner.'/'.$this->name;
+    }
 }

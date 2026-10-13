@@ -1,22 +1,29 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Survos\BookwormBundle;
 
+use Survos\BookwormBundle\Chat\ChatSession;
 use Survos\BookwormBundle\Command\BookwormService;
 use Survos\BookwormBundle\Corpus\CorpusRegistry;
-use Survos\BookwormBundle\Document\{MarkdownChunkTransformer,MarkdownCorpusLoader};
+use Survos\BookwormBundle\Document\MarkdownChunkTransformer;
+use Survos\BookwormBundle\Document\MarkdownCorpusLoader;
 use Survos\BookwormBundle\MessageHandler\IndexCorpusHandler;
 use Survos\BookwormBundle\Service\CorpusIndexer;
-use Survos\BookwormBundle\Source\{GitFetcher,GitHubFetcher};
-use Survos\BookwormBundle\Chat\ChatSession;
-use Survos\Kit\{AbstractSurvosBundle,SurvosKitBundle};
+use Survos\BookwormBundle\Source\GitFetcher;
+use Survos\BookwormBundle\Source\GitHubFetcher;
+use Survos\Kit\AbstractSurvosBundle;
+use Survos\Kit\SurvosKitBundle;
+use Symfony\AI\Store\Document\Loader\MarkdownLoader;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
-use Symfony\Component\DependencyInjection\{ContainerBuilder,ContainerInterface,Reference};
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Kernel\RequiredBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\AI\Store\Document\Loader\MarkdownLoader;
 
 #[RequiredBundle(SurvosKitBundle::class)]
 // Symfony\Component\HttpKernel\Bundle\Bundle <-- Flex auto-registration marker (see Survos\Kit\AbstractSurvosBundle)
@@ -50,8 +57,10 @@ final class SurvosBookwormBundle extends AbstractSurvosBundle
         $services->set(MarkdownLoader::class);
         $services->set(Filesystem::class);
         $services->set(GitFetcher::class);
-        $services->set(MarkdownCorpusLoader::class); $services->set(MarkdownChunkTransformer::class);
-        $indexers = []; $agents = [];
+        $services->set(MarkdownCorpusLoader::class);
+        $services->set(MarkdownChunkTransformer::class);
+        $indexers = [];
+        $agents = [];
         foreach ($config['corpora'] as $name => $corpus) {
             $indexers[$corpus['indexer']] = new Reference($corpus['indexer']);
             $agent = $corpus['agent'] ?? null;

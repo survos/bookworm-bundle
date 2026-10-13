@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Survos\BookwormBundle\Corpus;
 
 final readonly class CorpusRegistry
@@ -23,11 +25,12 @@ final readonly class CorpusRegistry
 
     public function get(string $name): Corpus
     {
-        return $this->corpora[$name] ?? throw new \InvalidArgumentException(sprintf(
-            'Unknown Bookworm corpus "%s". Available: %s.', $name,
-            implode(', ', array_keys($this->corpora)) ?: '(none)'));
+        return $this->corpora[$name] ?? throw new \InvalidArgumentException(sprintf('Unknown Bookworm corpus "%s". Available: %s.', $name, implode(', ', array_keys($this->corpora)) ?: '(none)'));
     }
 
     /** @return array<string, Corpus> */
-    public function all(): array { return $this->corpora; }
+    public function all(): array
+    {
+        return $this->corpora;
+    }
 }
