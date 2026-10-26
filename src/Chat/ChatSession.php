@@ -34,9 +34,9 @@ final readonly class ChatSession
         $history = $this->messages($corpus);
         $bag = new MessageBag();
         foreach ($history as $item) {
-            $bag->add('user' === $item['role'] ? Message::ofUser($item['content']) : Message::ofAssistant($item['content']));
+            $bag = $bag->with('user' === $item['role'] ? Message::ofUser($item['content']) : Message::ofAssistant($item['content']));
         }
-        $bag->add(Message::ofUser($question));
+        $bag = $bag->with(Message::ofUser($question));
         $answer = $agent->call($bag)->asText();
         $history[] = ['role' => 'user', 'content' => $question];
         $history[] = ['role' => 'assistant', 'content' => $answer];
